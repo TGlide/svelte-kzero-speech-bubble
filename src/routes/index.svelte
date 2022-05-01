@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TypedText from '$lib/components/TypedText.svelte';
+	import TypedLink from '$lib/components/TypedLink.svelte';
 	import { disablePreviousNav } from '$lib/store';
 
 	disablePreviousNav();
@@ -8,27 +8,32 @@
 <section>
 	<div class="wrapper">
 		<div class="about">
-			<TypedText text="About" href="about" instantKeys={['ArrowUp']} />
+			<TypedLink text="About" href="about" instantKeys={['ArrowUp']} />
 		</div>
 
 		<div class="projects">
-			<TypedText text="Projects" href="projects" instantKeys={['ArrowRight']} />
+			<TypedLink text="Projects" href="projects" instantKeys={['ArrowRight']} />
 		</div>
 
 		<div class="blog">
-			<TypedText text="Blog" href="blog" instantKeys={['ArrowDown']} />
+			<TypedLink text="Blog" href="blog" instantKeys={['ArrowDown']} />
 		</div>
 
 		<div class="contact">
-			<TypedText text="Contact" href="contact" instantKeys={['ArrowLeft']} />
+			<TypedLink text="Contact" href="contact" instantKeys={['ArrowLeft']} />
 		</div>
 
 		<h1>Thomas</h1>
+	</div>
+	<div class="test">
+		<TypedLink text="Test" href="test" --initial-opacity="0" />
 	</div>
 </section>
 
 <style>
 	section {
+		position: relative;
+
 		display: grid;
 		place-items: center;
 		height: 100vh;
@@ -69,5 +74,12 @@
 		top: 60%;
 		right: calc(100% + 5rem);
 		transform: translateY(-50%);
+	}
+
+	.test {
+		position: absolute;
+		bottom: calc(0% + 1rem);
+		left: 50%;
+		transform: translateX(-50%);
 	}
 </style>

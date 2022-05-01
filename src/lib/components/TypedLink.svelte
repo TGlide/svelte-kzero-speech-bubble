@@ -87,7 +87,7 @@
 	}
 
 	span {
-		opacity: 0.375;
+		opacity: var(--initial-opacity, 0.375);
 		transition: opacity 0.25s ease;
 	}
 

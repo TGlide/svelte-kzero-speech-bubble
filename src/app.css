@@ -376,7 +376,7 @@ body {
 /* Utility Classes */
 /* --------------- */
 
-/* General */
+/* Flex */
 
 .flex {
 	display: flex;
@@ -400,8 +400,10 @@ body {
 	flex: 1;
 }
 
+/* Layout */
+
 .container {
-	padding: 1rem 2rem;
+	padding: 1rem;
 }
 
 .mobile {
