@@ -1,49 +1,71 @@
 <script lang="ts" context="module">
-	// Global variable so that only 1 typed text can be filled at a time
-	let maxLettersFilled = 0;
+	let current = writable<HTMLAnchorElement | null>(null);
 </script>
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 
+	let ref: HTMLAnchorElement;
 	export let text: string;
 	export let href: string;
+	export let instantKeys: string[] = [];
 
 	let lettersFilled = 0;
 
+	// Reset lettersFilled when current changes
+	$: {
+		console.log('hey');
+		if ($current !== ref) {
+			lettersFilled = 0;
+		}
+	}
+
 	const onKeydown = (e: KeyboardEvent) => {
+		if (instantKeys.includes(e.key)) {
+			$current = ref;
+
+			if (lettersFilled === text.length) {
+				goto(href);
+			} else {
+				lettersFilled = text.length;
+			}
+
+			return;
+		}
+
 		if (e.key === 'Backspace') {
-			lettersFilled = 0;
-			maxLettersFilled = 0;
+			return ($current = null);
 		}
 
-		if (e.key === 'Enter' && lettersFilled === text.length) {
-			goto(href);
+		if (e.key === 'Enter' && $current === ref) {
+			if (lettersFilled === text.length) {
+				goto(href);
+			} else {
+				lettersFilled = text.length;
+			}
+			return;
 		}
 
-		if (text[lettersFilled].toLowerCase() === e.key.toLowerCase()) {
+		if (
+			lettersFilled < text.length &&
+			text[lettersFilled].toLowerCase() === e.key.toLowerCase() &&
+			[ref, null].includes($current)
+		) {
 			lettersFilled++;
-		}
-
-		if (lettersFilled > maxLettersFilled) {
-			maxLettersFilled = lettersFilled;
-		}
-
-		if (lettersFilled !== maxLettersFilled) {
-			// Only allow the component with the most typed letters to be focused
-			lettersFilled = 0;
+			$current = ref;
 		}
 	};
 
 	onMount(() => {
-		maxLettersFilled = 0;
+		$current = null;
 	});
 </script>
 
 <svelte:window on:keydown={onKeydown} />
 
-<a {href}>
+<a class:filled={lettersFilled === text.length} {href} bind:this={ref}>
 	{#each text as char, idx}
 		{@const filled = idx < lettersFilled}
 		<span class:filled>{char}</span>
@@ -51,15 +73,25 @@
 </a>
 
 <style>
+	a {
+		display: block;
+		transition: transform 0.25s ease;
+	}
+
+	a.filled {
+		transform: scale(1.25);
+	}
+
 	a:hover span {
 		opacity: 1;
 	}
 
 	span {
-		opacity: 0.5;
+		opacity: 0.375;
+		transition: opacity 0.25s ease;
 	}
 
-	.filled {
+	span.filled {
 		opacity: 1;
 	}
 </style>

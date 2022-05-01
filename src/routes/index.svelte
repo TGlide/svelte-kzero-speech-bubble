@@ -1,33 +1,26 @@
 <script lang="ts">
 	import TypedText from '$lib/components/TypedText.svelte';
-	import { store } from '$lib/store';
-	import { onDestroy, onMount } from 'svelte';
+	import { disablePreviousNav } from '$lib/store';
 
-	onMount(() => {
-		$store.disablePreviousNav = true;
-	});
-
-	onDestroy(() => {
-		$store.disablePreviousNav = false;
-	});
+	disablePreviousNav();
 </script>
 
 <section>
 	<div class="wrapper">
 		<div class="about">
-			<TypedText text="About" href="about" />
+			<TypedText text="About" href="about" instantKeys={['ArrowUp']} />
 		</div>
 
 		<div class="projects">
-			<TypedText text="Projects" href="projects" />
+			<TypedText text="Projects" href="projects" instantKeys={['ArrowRight']} />
 		</div>
 
 		<div class="blog">
-			<TypedText text="Blog" href="blog" />
+			<TypedText text="Blog" href="blog" instantKeys={['ArrowDown']} />
 		</div>
 
 		<div class="contact">
-			<TypedText text="Contact" href="contact" />
+			<TypedText text="Contact" href="contact" instantKeys={['ArrowLeft']} />
 		</div>
 
 		<h1>Thomas</h1>
