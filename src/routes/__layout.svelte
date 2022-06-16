@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { afterNavigate, goto } from '$app/navigation';
 	import { store } from '$lib/store';
-	import '../app.css';
+	import '../app.scss';
 
 	let previousPage: string | null;
 	afterNavigate((navigation) => {

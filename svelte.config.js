@@ -16,6 +16,11 @@ const config = {
 	kit: {
 		adapter: adapter(),
 
+		alias: {
+			$components: 'src/components',
+			$UI: 'src/UI'
+		},
+
 		vite: {
 			css: {
 				preprocessorOptions: {

@@ -1,5 +1,5 @@
 {
   "cssvar.files": [
-    "src/app.css"
+    "src/styles/theme.css"
   ]
 }

@@ -1,5 +1,7 @@
 <script lang="ts">
-	import TypedLink from '$lib/components/TypedLink.svelte';
+	import { DialogueEffect } from '$components/Dialogue.svelte';
+	import SpeechBubble from '$components/SpeechBubble.svelte';
+	import TypedLink from '$components/TypedLink.svelte';
 	import { disablePreviousNav } from '$lib/store';
 
 	disablePreviousNav();
@@ -23,7 +25,50 @@
 			<TypedLink text="Contact" href="contact" instantKeys={['ArrowLeft']} />
 		</div>
 
-		<h1>Thomas</h1>
+		<SpeechBubble
+			messages={[
+				// [
+				// 	{
+				// 		text: "Hello, I'm Thomas!"
+				// 	}
+				// ],
+				[
+					{
+						text: 'Wow!',
+						color: 'rainbow',
+						effect: DialogueEffect.IMPACT
+					},
+					{
+						text: 'I'
+					},
+					{
+						text: 'love',
+						color: 'red',
+						effect: DialogueEffect.INTENSE
+					},
+					{
+						text: 'card games!'
+					},
+					{
+						text: 'And',
+						skipDelay: true
+					},
+					{
+						text: 'cyberpunk dystopias!',
+						color: 'purple',
+						effect: DialogueEffect.WAVE
+					},
+					{
+						text: 'Is it on',
+						skipDelay: true
+					},
+					{
+						text: 'Webflix?',
+						color: 'yellow'
+					}
+				]
+			]}
+		/>
 	</div>
 	<div class="test">
 		<TypedLink text="Test" href="test" --initial-opacity="0" />
@@ -37,11 +82,6 @@
 		display: grid;
 		place-items: center;
 		height: 100vh;
-	}
-
-	h1 {
-		font-family: var(--ff-display);
-		font-size: 5rem;
 	}
 
 	.wrapper {
