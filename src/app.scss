@@ -1,0 +1,10 @@
+@import './styles/reset.css';
+@import './styles/theme.css';
+@import './styles/utility.css';
+
+body {
+	min-height: 100vh;
+	background-color: var(--bg);
+	color: var(--primary);
+	margin: 0;
+}
