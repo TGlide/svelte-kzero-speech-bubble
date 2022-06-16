@@ -73,7 +73,7 @@
 
 <style>
 	a {
-		display: block;
+		display: flex;
 		transition: transform 0.25s ease;
 	}
 
