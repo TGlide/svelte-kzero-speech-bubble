@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	import { cva } from 'class-variance-authority';
+	import { createEventDispatcher } from 'svelte';
 
 	// Constants
 	const CHAR_DELAY_STEP = 25;
@@ -16,22 +17,22 @@
 		WAVE = 'wave',
 		INTENSE = 'intense',
 		IMPACT = 'impact',
-		BASE = 'base'
+		BASE = 'base',
 	}
 
 	const effects: Record<DialogueEffect, BaseEffect> = {
 		[DialogueEffect.WAVE]: {
-			charDelay: CHAR_DELAY_STEP
+			charDelay: CHAR_DELAY_STEP,
 		},
 		[DialogueEffect.INTENSE]: {
-			charDelay: 50
+			charDelay: 50,
 		},
 		[DialogueEffect.IMPACT]: {
-			charDelay: 0
+			charDelay: 0,
 		},
 		[DialogueEffect.BASE]: {
-			charDelay: CHAR_DELAY_STEP
-		}
+			charDelay: CHAR_DELAY_STEP,
+		},
 	};
 
 	export type Text = {
@@ -41,10 +42,11 @@
 		skipDelay?: boolean;
 	};
 
-	type Char = { char: string; delay?: string; class?: string };
+	type Char = { char: string; delay?: number; class?: string };
+	type Word = Char[];
 
-	const emptyChar: Char = { char: '', delay: '0ms' };
-	emptyChar.toString = () => '';
+	const spaceChar: Char = { char: '', delay: 0 };
+	spaceChar.toString = () => '&nbsp;';
 
 	// Variants
 	const charClass = cva('char', {
@@ -53,15 +55,15 @@
 				[DialogueEffect.BASE]: '',
 				[DialogueEffect.WAVE]: 'char--wave',
 				[DialogueEffect.INTENSE]: 'char--intense',
-				[DialogueEffect.IMPACT]: 'char--impact'
+				[DialogueEffect.IMPACT]: 'char--impact',
 			},
 			color: {
 				yellow: 'char--yellow',
 				red: 'char--red',
 				rainbow: 'char--rainbow',
-				purple: 'char--purple'
-			}
-		}
+				purple: 'char--purple',
+			},
+		},
 	});
 
 	// Utilities
@@ -74,44 +76,68 @@
 		};
 	};
 
-	const getChars = (textArr: Text[]): Char[] => {
-		const chars: Char[] = [];
+	const getWords = (textArr: Text[]): Word[] => {
+		const words: Word[] = [];
 		let delay = 0;
 
 		textArr.forEach(({ text, color, effect, skipDelay }, index) => {
+			let word: Word = [];
+
 			const isLast = index === textArr.length - 1;
 			const effectObj = effects[effect || DialogueEffect.BASE];
 
 			for (const char of text) {
-				const charObj = { char, color, delay: `${delay}ms`, class: charClass({ color, effect }) };
+				const charObj = { char, color, delay, class: charClass({ color, effect }) };
 				charObj.toString = getCharToString(charObj);
-				chars.push(charObj);
+
+				word.push(charObj);
+
+				if (char === ' ') {
+					words.push(word);
+					word = [];
+				}
 
 				delay += effectObj.charDelay;
 			}
 
 			if (!isLast) {
-				chars.push(emptyChar);
+				word.push(spaceChar);
 			}
 
+			words.push(word);
 			delay += skipDelay ? 0 : TEXT_DELAY_STEP;
 		});
 
-		return chars;
+		return words;
 	};
 </script>
 
 <script lang="ts">
 	export let text: Text[];
 
-	$: chars = getChars(text);
+	$: words = getWords(text);
+	$: totalDelay = words.at(-1)?.at(-1)?.delay || 0;
+
+	const dispatch = createEventDispatcher<{
+		finish: void;
+	}>();
+
+	let timeout: NodeJS.Timeout | null = null;
+	$: {
+		timeout && clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			dispatch('finish');
+		}, totalDelay);
+	}
 </script>
 
 <p>
-	{#each chars as char}
-		<span class={char.class} style:--delay={char.delay}>
-			{@html char}
-		</span>
+	{#each words as word}
+		<p>
+			{#each word as char}
+				<span class={char.class} style:--delay={`${char.delay}ms`}>{@html char}</span>
+			{/each}
+		</p>
 	{/each}
 </p>
 
@@ -208,21 +234,26 @@
 
 	@keyframes wave {
 		0% {
-			transform: translateY(1px);
+			transform: translateY(0px);
 		}
 		50% {
-			transform: translateY(-1px);
+			transform: translateY(-2px);
 		}
 		100% {
-			transform: translateY(1px);
+			transform: translateY(0px);
 		}
+	}
+
+	p {
+		display: flex;
+		flex-wrap: wrap;
 	}
 
 	.char {
 		display: inline-block;
 		$base-animation: move 250ms ease var(--delay, 0ms) both;
 		animation: $base-animation;
-		line-height: 1.2rem;
+		line-height: 1.5rem;
 
 		/* Colors */
 		&.char--rainbow {

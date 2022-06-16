@@ -22,13 +22,18 @@
 			}, DEFAULT_DURATION);
 		}
 	}
+
+	let finished = false;
 </script>
 
 <div class="wrapper">
-	<div class="bubble">
+	<p>
+		{finished ? 'finished' : 'not finished'}
+	</p>
+	<div class="bubble mt-4">
 		{#if activeMessage}
 			{#key activeIndex}
-				<Dialogue text={activeMessage} />
+				<Dialogue text={activeMessage} on:finish={() => (finished = true)} />
 			{/key}
 		{/if}
 	</div>
@@ -36,7 +41,7 @@
 
 <style>
 	.wrapper {
-		width: 350px;
+		max-width: 400px;
 		display: grid;
 		place-items: center;
 	}
@@ -46,6 +51,6 @@
 		border-radius: var(--radii-sm);
 		color: var(--white);
 		font-family: var(--ff-mono);
-		padding: 1rem;
+		padding: 0.75rem 1rem;
 	}
 </style>

@@ -36,37 +36,37 @@
 					{
 						text: 'Wow!',
 						color: 'rainbow',
-						effect: DialogueEffect.IMPACT
+						effect: DialogueEffect.IMPACT,
 					},
 					{
-						text: 'I'
+						text: 'I',
 					},
 					{
 						text: 'love',
 						color: 'red',
-						effect: DialogueEffect.INTENSE
+						effect: DialogueEffect.INTENSE,
 					},
 					{
-						text: 'card games!'
+						text: 'card games!',
 					},
 					{
 						text: 'And',
-						skipDelay: true
+						skipDelay: true,
 					},
 					{
 						text: 'cyberpunk dystopias!',
 						color: 'purple',
-						effect: DialogueEffect.WAVE
+						effect: DialogueEffect.WAVE,
 					},
 					{
 						text: 'Is it on',
-						skipDelay: true
+						skipDelay: true,
 					},
 					{
 						text: 'Webflix?',
-						color: 'yellow'
-					}
-				]
+						color: 'yellow',
+					},
+				],
 			]}
 		/>
 	</div>
