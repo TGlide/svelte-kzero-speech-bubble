@@ -16,7 +16,6 @@
 
 	// Reset lettersFilled when current changes
 	$: {
-		console.log('hey');
 		if ($current !== ref) {
 			lettersFilled = 0;
 		}
@@ -78,6 +77,7 @@
 		transition: transform 0.25s ease;
 	}
 
+	a:hover,
 	a.filled {
 		transform: scale(1.25);
 	}
