@@ -41,7 +41,7 @@
 
 <style>
 	.wrapper {
-		max-width: 400px;
+		/* max-width: 400px; */
 		display: grid;
 		place-items: center;
 	}
@@ -52,5 +52,6 @@
 		color: var(--white);
 		font-family: var(--ff-mono);
 		padding: 0.75rem 1rem;
+		max-width: 400px;
 	}
 </style>

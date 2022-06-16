@@ -131,7 +131,7 @@
 	}
 </script>
 
-<p>
+<div>
 	{#each words as word}
 		<p>
 			{#each word as char}
@@ -139,7 +139,7 @@
 			{/each}
 		</p>
 	{/each}
-</p>
+</div>
 
 <style lang="scss">
 	@keyframes move {
@@ -244,7 +244,7 @@
 		}
 	}
 
-	p {
+	div {
 		display: flex;
 		flex-wrap: wrap;
 	}
