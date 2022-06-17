@@ -1,13 +1,14 @@
 <script lang="ts" context="module">
 	// Constants
-	const DEFAULT_DURATION = 5000;
+	const FINISH_DELAY = 3000;
 
 	// Types
 	export type Message = Text[];
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/env';
+	import { onMount } from 'svelte';
+	import { scale } from 'svelte/transition';
 	import Dialogue, { type Text } from './Dialogue.svelte';
 
 	export let messages: Message[] = [];
@@ -15,33 +16,34 @@
 	let activeIndex = 0;
 	$: activeMessage = messages[activeIndex];
 
-	$: {
-		if (browser && activeIndex < messages.length - 1) {
-			window.setTimeout(() => {
-				activeIndex += 1;
-			}, DEFAULT_DURATION);
-		}
-	}
+	let mounted = false;
 
-	let finished = false;
+	onMount(() => {
+		mounted = true;
+	});
+
+	const handleFinish = () => {
+		window.setTimeout(() => {
+			if (activeIndex >= messages.length) {
+				return;
+			}
+			activeIndex++;
+		}, FINISH_DELAY);
+	};
 </script>
 
 <div class="wrapper">
-	<p>
-		{finished ? 'finished' : 'not finished'}
-	</p>
-	<div class="bubble mt-4">
-		{#if activeMessage}
-			{#key activeIndex}
-				<Dialogue text={activeMessage} on:finish={() => (finished = true)} />
-			{/key}
-		{/if}
-	</div>
+	{#if activeMessage && mounted}
+		{#key activeIndex}
+			<div class="bubble mt-4" in:scale={{ delay: 600 }} out:scale={{ duration: 500 }}>
+				<Dialogue text={activeMessage} on:finish={handleFinish} />
+			</div>
+		{/key}
+	{/if}
 </div>
 
 <style>
 	.wrapper {
-		/* max-width: 400px; */
 		display: grid;
 		place-items: center;
 	}
@@ -52,6 +54,5 @@
 		color: var(--white);
 		font-family: var(--ff-mono);
 		padding: 0.75rem 1rem;
-		max-width: 400px;
 	}
 </style>

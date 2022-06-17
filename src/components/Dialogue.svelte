@@ -3,11 +3,12 @@
 	import { createEventDispatcher } from 'svelte';
 
 	// Constants
+	const INITIAL_DELAY = 1000;
 	const CHAR_DELAY_STEP = 25;
 	const TEXT_DELAY_STEP = 500;
 
 	// Types
-	type Color = 'yellow' | 'red' | 'rainbow' | 'purple';
+	type Color = 'yellow' | 'red' | 'rainbow' | 'purple' | 'cyan';
 
 	type BaseEffect = {
 		charDelay: number;
@@ -40,6 +41,7 @@
 		color?: Color;
 		effect?: DialogueEffect;
 		skipDelay?: boolean;
+		skipTextSpace?: boolean;
 	};
 
 	type Char = { char: string; delay?: number; class?: string };
@@ -62,6 +64,7 @@
 				red: 'char--red',
 				rainbow: 'char--rainbow',
 				purple: 'char--purple',
+				cyan: 'char--cyan',
 			},
 		},
 	});
@@ -78,9 +81,9 @@
 
 	const getWords = (textArr: Text[]): Word[] => {
 		const words: Word[] = [];
-		let delay = 0;
+		let delay = INITIAL_DELAY;
 
-		textArr.forEach(({ text, color, effect, skipDelay }, index) => {
+		textArr.forEach(({ text, color, effect, skipDelay, skipTextSpace }, index) => {
 			let word: Word = [];
 
 			const isLast = index === textArr.length - 1;
@@ -100,7 +103,7 @@
 				delay += effectObj.charDelay;
 			}
 
-			if (!isLast) {
+			if (!isLast && !skipTextSpace) {
 				word.push(spaceChar);
 			}
 
@@ -142,7 +145,7 @@
 </div>
 
 <style lang="scss">
-	@keyframes move {
+	@keyframes -global-move {
 		0% {
 			opacity: 0;
 			transform: translate(4px, 4px);
@@ -154,7 +157,7 @@
 		}
 	}
 
-	@keyframes rainbow {
+	@keyframes -global-rainbow {
 		0% {
 			color: rgb(255, 0, 0);
 		}
@@ -196,7 +199,7 @@
 		}
 	}
 
-	@keyframes shake {
+	@keyframes -global-shake {
 		0% {
 			transform: translate(0, 0);
 		}
@@ -232,7 +235,7 @@
 		}
 	}
 
-	@keyframes wave {
+	@keyframes -global-wave {
 		0% {
 			transform: translateY(0px);
 		}
@@ -251,13 +254,14 @@
 
 	.char {
 		display: inline-block;
-		$base-animation: move 250ms ease var(--delay, 0ms) both;
-		animation: $base-animation;
+		--base-animation: move 250ms ease var(--delay, 0ms) both;
+		animation: var(--base-animation), var(--rainbow-animation, none), var(--intense-animation, none),
+			var(--wave-animation, none);
 		line-height: 1.5rem;
 
 		/* Colors */
 		&.char--rainbow {
-			animation: $base-animation, rainbow 5000ms linear infinite;
+			--rainbow-animation: rainbow 5000ms linear infinite;
 		}
 
 		&.char--red {
@@ -272,13 +276,17 @@
 			color: var(--palette-yellow-80);
 		}
 
+		&.char--cyan {
+			color: var(--palette-cyan-60);
+		}
+
 		/* Effetcs */
 		&.char--intense {
-			animation: $base-animation, shake 750ms linear infinite var(--delay, 0ms);
+			--intense-animation: shake 750ms linear infinite var(--delay, 0ms);
 		}
 
 		&.char--wave {
-			animation: $base-animation, wave 1000ms ease infinite var(--delay, 0ms);
+			--wave-animation: wave 1000ms ease infinite var(--delay, 0ms);
 		}
 	}
 </style>
