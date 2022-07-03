@@ -26,6 +26,10 @@
   flex: 1;
 }
 
+.items-center {
+  align-items: center;
+}
+
 /* Media queries */
 .mobile {
   display: none;
@@ -66,4 +70,26 @@
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+/* Components */
+.btn {
+  background-color: var(--palette-grey-20);
+  border-radius: var(--radii-sm);
+  font-family: var(--ff-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+
+  transition: background-color 200ms ease;
+}
+
+.btn:hover {
+  background-color: var(--palette-grey-30);
+  cursor: pointer;
+}
+
+.btn:active {
+  background-color: var(--palette-grey-15);
+
 }

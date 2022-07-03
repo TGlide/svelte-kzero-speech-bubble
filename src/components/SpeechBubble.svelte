@@ -35,7 +35,7 @@
 <div class="wrapper">
 	{#if activeMessage && mounted}
 		{#key activeIndex}
-			<div class="bubble mt-4" in:scale={{ delay: 600 }} out:scale={{ duration: 500 }}>
+			<div class="bubble mt-4" in:scale|local={{ delay: 600 }} out:scale|local={{ duration: 500 }}>
 				<Dialogue text={activeMessage} on:finish={handleFinish} />
 			</div>
 		{/key}
@@ -46,6 +46,7 @@
 	.wrapper {
 		display: grid;
 		place-items: center;
+		max-width: 500px;
 	}
 
 	.bubble {

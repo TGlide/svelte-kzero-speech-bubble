@@ -1,31 +1,15 @@
 <script lang="ts">
 	import { DialogueEffect } from '$components/Dialogue.svelte';
 	import SpeechBubble from '$components/SpeechBubble.svelte';
-	import TypedLink from '$components/TypedLink.svelte';
-	import { disablePreviousNav } from '$lib/store';
 
-	disablePreviousNav();
+	let resetCount = 0;
+
+	const reset = () => resetCount++;
 </script>
 
 <section>
-	<div class="wrapper">
-		<div class="about">
-			<TypedLink text="About" href="about" instantKeys={['ArrowUp']} />
-		</div>
-
-		<div class="projects">
-			<TypedLink text="Projects" href="projects" instantKeys={['ArrowRight']} />
-		</div>
-
-		<div class="blog">
-			<TypedLink text="Blog" href="blog" instantKeys={['ArrowDown']} />
-		</div>
-
-		<div class="contact">
-			<TypedLink text="Contact" href="contact" instantKeys={['ArrowLeft']} />
-		</div>
-
-		<div class="center">
+	<div class="flex-col items-center gap">
+		{#key resetCount}
 			<SpeechBubble
 				messages={[
 					[
@@ -79,10 +63,8 @@
 					],
 				]}
 			/>
-		</div>
-	</div>
-	<div class="test">
-		<TypedLink text="Test" href="test" --initial-opacity="0" />
+		{/key}
+		<button class="btn" on:click={reset}>Reset</button>
 	</div>
 </section>
 
@@ -93,51 +75,5 @@
 		display: grid;
 		place-items: center;
 		height: 100vh;
-	}
-
-	.wrapper {
-		position: relative;
-
-		> .center {
-			display: grid;
-			place-items: center;
-			width: 400px;
-			height: 100px;
-		}
-
-		> .about {
-			position: absolute;
-			bottom: calc(100% + 6.5rem);
-			left: 50%;
-			transform: translateX(-50%);
-		}
-
-		> .projects {
-			position: absolute;
-			top: 60%;
-			left: calc(100% + 5rem);
-			transform: translateY(-50%);
-		}
-
-		> .blog {
-			position: absolute;
-			top: calc(100% + 6.5rem);
-			left: 50%;
-			transform: translateX(-50%);
-		}
-
-		> .contact {
-			position: absolute;
-			top: 60%;
-			right: calc(100% + 5rem);
-			transform: translateY(-50%);
-		}
-	}
-
-	.test {
-		position: absolute;
-		bottom: calc(0% + 1rem);
-		left: 50%;
-		transform: translateX(-50%);
 	}
 </style>
